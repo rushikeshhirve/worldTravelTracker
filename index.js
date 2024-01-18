@@ -28,7 +28,10 @@ const db = new Pool({
 db.connect()
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.set('view engine', 'ejs')
+app.set('views', __dirname + '/views')
+
+app.use(express.static(__dirname + "/public/"));;
 
 app.get("/", async (req, res) => {
     let result = await db.query("Select * from visited_countries")
