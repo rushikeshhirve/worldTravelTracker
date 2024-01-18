@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const pg = require("pg")
+const { Pool } = pg;
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -12,12 +13,17 @@ let countryList
 let totalcountries
 let countryName
 
-const db = new pg.Client({
-    user: "postgres",
-    password: "123456",
-    host: "localhost",
-    database: "webproject",
-    port: 5432
+// const db = new pg.Client({
+//     user: "postgres",
+//     password: "123456",
+//     host: "localhost",
+//     database: "webproject",
+//     port: 5432
+// })
+// db.connect()
+
+const db = new Pool({
+    connectionString: process.env.POSTGRES_URL + "?sslmode=require",
 })
 db.connect()
 
@@ -55,7 +61,7 @@ app.post("/add", async (req, res) => {
             res.render("index.ejs", { countries: countryList, total: totalcountries, countryNames: countryName, error: "Country has already been added." })
         }
     } catch (error) {
-        res.render("index.ejs", { countries: countryList, total: totalcountries,countryNames: countryName, error: "Country does not exist." })
+        res.render("index.ejs", { countries: countryList, total: totalcountries, countryNames: countryName, error: "Country does not exist." })
     }
 })
 
